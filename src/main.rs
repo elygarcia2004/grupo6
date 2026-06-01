@@ -43,10 +43,11 @@ async fn main() {
         // NUEVO: Aquí conectamos el controlador de citas y le pasamos el acceso a la base de datos
         .merge(controller::cita_controller::cita_router().with_state(pool.clone()));
 
-    let direccion = "127.0.0.1:3000";
-    let listener = tokio::net::TcpListener::bind(direccion)
+    let port = std::env::var("PORT").unwrap_or_else(|_| "3000".to_string());
+    let direccion = format!("0.0.0.0:{}", port);
+    let listener = tokio::net::TcpListener::bind(&direccion)
         .await
-        .expect("No se pudo enlazar el puerto 3000");
+        .expect("No se pudo enlazar el puerto");
 
     println!("Servidor escuchando en http://{direccion}");
 
